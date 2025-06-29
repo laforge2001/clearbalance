@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';More actions;
+import React, { useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -22,8 +22,8 @@ export default function Home() {
         console.error('An unexpected error occurred:', e);
       }
     };
-    fetchData();
-  }, []); // Empty dependency array means this runs once on mount
+  //   fetchData();
+  // }, []); // Empty dependency array means this runs once on mount
   
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
