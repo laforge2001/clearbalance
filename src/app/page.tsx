@@ -1,29 +1,50 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+// Make sure these environment variables are properly set
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Add error handling for missing environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Home() {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    // THIS IS WHERE YOU ACTUALLY USE THE 'supabase' VARIABLE
-    console.log(supabase); 
     const fetchData = async () => {
       try {
-        const { data, error } = await supabase.from('your_table').select('*');
-        if (error) {
-          console.error('Error fetching data:', error.message);
+        setIsLoading(true);
+        setError(null);
+        
+        // Replace 'your_table' with your actual table name
+        const { data: fetchedData, error: fetchError } = await supabase
+          .from('your_table') // Update this to your actual table name
+          .select('*');
+        
+        if (fetchError) {
+          console.error('Error fetching data:', fetchError.message);
+          setError(fetchError.message);
         } else {
-          console.log('Data:', data);
+          console.log('Data:', fetchedData);
+          setData(fetchedData);
         }
       } catch (e) {
         console.error('An unexpected error occurred:', e);
+        setError('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
       }
     };
+
     fetchData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
   
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -34,11 +55,33 @@ export default function Home() {
         <p className="text-center text-gray-600 mb-8">
           Your personal finance dashboard is coming soon!
         </p>
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded text-center">
+        
+        {/* Dynamic status based on actual connection */}
+        <div className={`border px-4 py-3 rounded text-center ${
+          error 
+            ? 'bg-red-100 border-red-400 text-red-700'
+            : 'bg-green-100 border-green-400 text-green-700'
+        }`}>
           ✅ Website deployed successfully!
           <br />
-          ✅ Database connected!
+          {isLoading ? (
+            '🔄 Connecting to database...'
+          ) : error ? (
+            `❌ Database connection error: ${error}`
+          ) : (
+            '✅ Database connected!'
+          )}
         </div>
+
+        {/* Optional: Display fetched data */}
+        {data && !error && (
+          <div className="mt-4 p-4 bg-gray-100 rounded">
+            <h2 className="text-lg font-semibold mb-2">Database Data:</h2>
+            <pre className="text-xs overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </main>
   );
