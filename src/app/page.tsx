@@ -9,6 +9,7 @@ const supabase = createClient(
 export default function Home() {
   useEffect(() => {
     // THIS IS WHERE YOU ACTUALLY USE THE 'supabase' VARIABLE
+    console.log(supabase); 
     const fetchData = async () => {
       try {
         const { data, error } = await supabase.from('your_table').select('*');
