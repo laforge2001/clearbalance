@@ -1,30 +1,30 @@
 import React, { useEffect } from 'react';More actions
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// )
 
 export default function Home() {
-  useEffect(() => {
-    // THIS IS WHERE YOU ACTUALLY USE THE 'supabase' VARIABLE
-    console.log(supabase); 
-    const fetchData = async () => {
-      try {
-        const { data, error } = await supabase.from('your_table').select('*');
-        if (error) {
-          console.error('Error fetching data:', error.message);
-        } else {
-          console.log('Data:', data);
-        }
-      } catch (e) {
-        console.error('An unexpected error occurred:', e);
-      }
-    };
+  // useEffect(() => {
+  //   // THIS IS WHERE YOU ACTUALLY USE THE 'supabase' VARIABLE
+  //   console.log(supabase); 
+  //   const fetchData = async () => {
+  //     try {
+  //       const { data, error } = await supabase.from('your_table').select('*');
+  //       if (error) {
+  //         console.error('Error fetching data:', error.message);
+  //       } else {
+  //         console.log('Data:', data);
+  //       }
+  //     } catch (e) {
+  //       console.error('An unexpected error occurred:', e);
+  //     }
+  //   };
 
-    fetchData();
-  }, []); // Empty dependency array means this runs once on mount
+  //   fetchData();
+  // }, []); // Empty dependency array means this runs once on mount
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm">
